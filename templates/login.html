@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Login | ClassNest{% endblock %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <!-- HEADER -->
+        <div class="auth-header">
+
+            <div class="auth-icon">
+                <i class="bi bi-box-arrow-in-right"></i>
+            </div>
+
+            <h2>Welcome Back!</h2>
+
+            <p>
+                Login to continue to your ClassNest account.
+            </p>
+
+        </div>
+
+
+        <!-- LOGIN FORM -->
+        <form method="POST" action="{{ url_for('login') }}">
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+
+                <label for="email" class="form-label">
+                    Email Address
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-envelope"></i>
+                    </span>
+
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+            <div class="mb-4">
+
+                <label for="password" class="form-label">
+                    Password
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-lock"></i>
+                    </span>
+
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        onclick="togglePassword()"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOGIN BUTTON -->
+            <button
+                type="submit"
+                class="btn btn-primary w-100 btn-lg"
+            >
+                <i class="bi bi-box-arrow-in-right"></i>
+                Login
+            </button>
+
+        </form>
+
+
+        <!-- REGISTER LINK -->
+        <div class="auth-footer">
+
+            <p class="mb-0">
+                Don't have an account?
+
+                <a href="{{ url_for('register') }}">
+                    Create an account
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+function togglePassword() {
+
+    const password = document.getElementById("password");
+    const button = event.currentTarget;
+    const icon = button.querySelector("i");
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+
+    } else {
+
+        password.type = "password";
+
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

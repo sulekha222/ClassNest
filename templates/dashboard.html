@@ -1,0 +1,506 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | ClassNest{% endblock %}
+
+{% block content %}
+
+<!-- DASHBOARD HEADER -->
+<div class="dashboard-header">
+
+    <div>
+        <span class="section-label">DASHBOARD</span>
+
+        <h1 class="mt-2">
+            Welcome, {{ user.name }}! 👋
+        </h1>
+
+        <p class="text-muted">
+            {% if user.role == "teacher" %}
+                Manage your classrooms and assignments.
+            {% else %}
+                View your classes, assignments and progress.
+            {% endif %}
+        </p>
+    </div>
+
+</div>
+
+
+{% if user.role == "teacher" %}
+
+<!-- ========================= -->
+<!-- TEACHER DASHBOARD -->
+<!-- ========================= -->
+
+<div class="row g-4 mb-5">
+
+    <!-- CLASSROOMS -->
+    <div class="col-md-4">
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-building"></i>
+            </div>
+
+            <div>
+                <h3>{{ classrooms|length }}</h3>
+                <p>My Classrooms</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ASSIGNMENTS -->
+    <div class="col-md-4">
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-file-earmark-text"></i>
+            </div>
+
+            <div>
+                <h3>{{ assignments }}</h3>
+                <p>Assignments</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- STUDENTS -->
+    <div class="col-md-4">
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <div>
+                <h3>{{ student_count }}</h3>
+                <p>Students</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TEACHER ACTIONS -->
+<div class="dashboard-section">
+
+    <div class="section-heading">
+
+        <div>
+            <h3>Quick Actions</h3>
+            <p class="text-muted">
+                Manage your teaching activities.
+            </p>
+        </div>
+
+        <a
+            href="{{ url_for('create_classroom') }}"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-plus-lg"></i>
+            Create Classroom
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- MY CLASSROOMS -->
+<div class="dashboard-section mt-5">
+
+    <div class="section-heading">
+
+        <div>
+            <h3>My Classrooms</h3>
+            <p class="text-muted">
+                Your created classrooms.
+            </p>
+        </div>
+
+    </div>
+
+
+    {% if classrooms %}
+
+        <div class="row g-4">
+
+            {% for classroom in classrooms %}
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="classroom-card">
+
+                        <div class="classroom-card-top">
+
+                            <div class="classroom-icon">
+                                <i class="bi bi-mortarboard-fill"></i>
+                            </div>
+
+                            <span class="class-code">
+                                {{ classroom.class_code }}
+                            </span>
+
+                        </div>
+
+                        <h4>
+                            {{ classroom.name }}
+                        </h4>
+
+                        <p class="text-muted">
+                            {{ classroom.subject }}
+
+                            {% if classroom.section %}
+                                • {{ classroom.section }}
+                            {% endif %}
+                        </p>
+
+                        <p class="small text-muted">
+                            <i class="bi bi-people"></i>
+                            {{ classroom.enrollments|length }} students
+                        </p>
+
+                        <a
+                            href="{{ url_for('classroom', classroom_id=classroom.id) }}"
+                            class="btn btn-outline-primary w-100"
+                        >
+                            Open Classroom
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <i class="bi bi-building"></i>
+
+            <h4>No classrooms yet</h4>
+
+            <p>
+                Create your first classroom to get started.
+            </p>
+
+            <a
+                href="{{ url_for('create_classroom') }}"
+                class="btn btn-primary"
+            >
+                <i class="bi bi-plus-lg"></i>
+                Create Classroom
+            </a>
+
+        </div>
+
+    {% endif %}
+
+{% else %}
+
+<!-- ========================= -->
+<!-- STUDENT DASHBOARD -->
+<!-- ========================= -->
+
+<div class="row g-4 mb-5">
+
+    <!-- CLASSES -->
+    <div class="col-md-4">
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-building"></i>
+            </div>
+
+            <div>
+                <h3>{{ classrooms|length }}</h3>
+                <p>Joined Classes</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ASSIGNMENTS -->
+    <div class="col-md-4">
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-file-earmark-text"></i>
+            </div>
+
+            <div>
+                <h3>{{ assignments|length }}</h3>
+                <p>Assignments</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PROFILE -->
+    <div class="col-md-4">
+
+        <div class="dashboard-stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-person-circle"></i>
+            </div>
+
+            <div>
+                <h3>{{ user.role|capitalize }}</h3>
+                <p>Account</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- JOIN CLASS -->
+<div class="join-class-card">
+
+    <div>
+
+        <h3>
+            <i class="bi bi-door-open"></i>
+            Join a Classroom
+        </h3>
+
+        <p class="text-muted mb-0">
+            Enter the classroom code given by your teacher.
+        </p>
+
+    </div>
+
+
+    <form
+        method="POST"
+        action="{{ url_for('join_classroom') }}"
+        class="join-form"
+    >
+
+        <input
+            type="text"
+            name="class_code"
+            class="form-control"
+            placeholder="Enter class code"
+            maxlength="20"
+            required
+        >
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-plus-lg"></i>
+            Join
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- JOINED CLASSROOMS -->
+<div class="dashboard-section mt-5">
+
+    <div class="section-heading">
+
+        <div>
+            <h3>My Classrooms</h3>
+
+            <p class="text-muted">
+                Classes you have joined.
+            </p>
+        </div>
+
+    </div>
+
+
+    {% if classrooms %}
+
+        <div class="row g-4">
+
+            {% for classroom in classrooms %}
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="classroom-card">
+
+                        <div class="classroom-card-top">
+
+                            <div class="classroom-icon">
+                                <i class="bi bi-mortarboard-fill"></i>
+                            </div>
+
+                            <span class="class-code">
+                                {{ classroom.class_code }}
+                            </span>
+
+                        </div>
+
+                        <h4>
+                            {{ classroom.name }}
+                        </h4>
+
+                        <p class="text-muted">
+                            {{ classroom.subject }}
+
+                            {% if classroom.section %}
+                                • {{ classroom.section }}
+                            {% endif %}
+                        </p>
+
+                        <p class="small text-muted">
+                            <i class="bi bi-person-workspace"></i>
+                            Teacher: {{ classroom.teacher.name }}
+                        </p>
+
+                        <a
+                            href="{{ url_for('classroom', classroom_id=classroom.id) }}"
+                            class="btn btn-outline-primary w-100"
+                        >
+                            Open Classroom
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <i class="bi bi-building"></i>
+
+            <h4>No classrooms yet</h4>
+
+            <p>
+                Join a classroom using the code provided by your teacher.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- ASSIGNMENTS -->
+<div class="dashboard-section mt-5">
+
+    <div class="section-heading">
+
+        <div>
+            <h3>Recent Assignments</h3>
+
+            <p class="text-muted">
+                Assignments from your classrooms.
+            </p>
+        </div>
+
+    </div>
+
+
+    {% if assignments %}
+
+        <div class="row g-4">
+
+            {% for assignment in assignments %}
+
+                <div class="col-md-6">
+
+                    <div class="assignment-preview-card">
+
+                        <div class="d-flex justify-content-between">
+
+                            <div>
+
+                                <span class="assignment-icon">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </span>
+
+                                <h5 class="mt-3">
+                                    {{ assignment.title }}
+                                </h5>
+
+                            </div>
+
+                            <span class="badge bg-light text-dark">
+                                {{ assignment.max_marks }} marks
+                            </span>
+
+                        </div>
+
+                        <p class="text-muted">
+                            {{ assignment.classroom.name }}
+                        </p>
+
+                        {% if assignment.due_date %}
+
+                            <p class="small">
+
+                                <i class="bi bi-calendar-event"></i>
+
+                                Due:
+                                {{ assignment.due_date.strftime("%d %b %Y, %I:%M %p") }}
+
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <i class="bi bi-file-earmark"></i>
+
+            <h4>No assignments</h4>
+
+            <p>
+                Your assignments will appear here.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endif %}
+
+{% endblock %}

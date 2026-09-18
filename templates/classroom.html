@@ -1,0 +1,736 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if create_mode %}
+        Create Classroom - ClassNest
+    {% else %}
+        {{ classroom.name }} - ClassNest
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+{% if create_mode %}
+
+<!-- =====================================================
+     CREATE CLASSROOM
+     ===================================================== -->
+
+<div class="auth-wrapper">
+
+    <div class="auth-card">
+
+        <div class="text-center mb-4">
+
+            <div class="auth-icon">
+                <i class="bi bi-building"></i>
+            </div>
+
+            <h2>Create a Classroom</h2>
+
+            <p class="text-muted">
+                Create a new learning space for your students.
+            </p>
+
+        </div>
+
+
+        <form method="POST"
+              action="{{ url_for('create_classroom') }}">
+
+            <!-- Class Name -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Class Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    class="form-control"
+                    placeholder="e.g. Data Structures"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Subject -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    name="subject"
+                    class="form-control"
+                    placeholder="e.g. Computer Science"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Section -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Section
+                </label>
+
+                <input
+                    type="text"
+                    name="section"
+                    class="form-control"
+                    placeholder="e.g. CSE-A"
+                >
+
+            </div>
+
+
+            <!-- Description -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Description
+                </label>
+
+                <textarea
+                    name="description"
+                    class="form-control"
+                    rows="4"
+                    placeholder="Write a short description about this classroom..."
+                ></textarea>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary w-100">
+
+                <i class="bi bi-plus-circle"></i>
+                Create Classroom
+
+            </button>
+
+        </form>
+
+
+        <div class="text-center mt-3">
+
+            <a href="{{ url_for('dashboard') }}">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% else %}
+
+<!-- =====================================================
+     CLASSROOM PAGE
+     ===================================================== -->
+
+<div class="classroom-page">
+
+
+    <!-- =================================================
+         CLASSROOM HEADER
+         ================================================= -->
+
+    <div class="classroom-header">
+
+        <div>
+
+            <span class="classroom-subject">
+                {{ classroom.subject }}
+            </span>
+
+            <h1>
+                {{ classroom.name }}
+            </h1>
+
+            {% if classroom.section %}
+                <p class="mb-1">
+                    Section: {{ classroom.section }}
+                </p>
+            {% endif %}
+
+            {% if classroom.description %}
+                <p class="classroom-description">
+                    {{ classroom.description }}
+                </p>
+            {% endif %}
+
+        </div>
+
+
+        <!-- CLASS CODE -->
+
+        <div class="class-code-box">
+
+            <small>
+                Class Code
+            </small>
+
+            <div class="class-code-value">
+
+                <strong>
+                    {{ classroom.class_code }}
+                </strong>
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-light"
+                    onclick="copyClassCode('{{ classroom.class_code }}')">
+
+                    <i class="bi bi-copy"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         TABS
+         ================================================= -->
+
+    <div class="classroom-tabs">
+
+        <button
+            class="classroom-tab active"
+            onclick="showClassTab('stream', this)">
+
+            <i class="bi bi-chat-left-text"></i>
+            Stream
+
+        </button>
+
+
+        <button
+            class="classroom-tab"
+            onclick="showClassTab('classwork', this)">
+
+            <i class="bi bi-journal-text"></i>
+            Classwork
+
+        </button>
+
+
+        <button
+            class="classroom-tab"
+            onclick="showClassTab('people', this)">
+
+            <i class="bi bi-people"></i>
+            People
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         STREAM
+         ================================================= -->
+
+    <div
+        id="stream"
+        class="classroom-tab-content active">
+
+        <div class="row g-4">
+
+            <div class="col-lg-8">
+
+
+                <!-- ANNOUNCEMENT FORM -->
+
+                {% if user.role == "teacher" %}
+
+                <div class="content-card mb-4">
+
+                    <div class="section-heading">
+
+                        <div>
+                            <h4>
+                                <i class="bi bi-megaphone"></i>
+                                Make an Announcement
+                            </h4>
+
+                            <p>
+                                Share an update with your students.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'create_announcement',
+                            classroom_id=classroom.id
+                        ) }}">
+
+                        <textarea
+                            name="content"
+                            class="form-control mb-3"
+                            rows="3"
+                            placeholder="Write an announcement..."
+                            required
+                        ></textarea>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+
+                            <i class="bi bi-send"></i>
+                            Post Announcement
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+                {% endif %}
+
+
+
+                <!-- ANNOUNCEMENTS -->
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <h4>
+                            <i class="bi bi-megaphone"></i>
+                            Announcements
+                        </h4>
+
+                    </div>
+
+                </div>
+
+
+                {% if classroom.announcements %}
+
+                    {% for announcement in classroom.announcements|sort(attribute='created_at', reverse=true) %}
+
+                    <div class="announcement-card">
+
+                        <div class="announcement-icon">
+
+                            <i class="bi bi-megaphone-fill"></i>
+
+                        </div>
+
+                        <div>
+
+                            <p class="announcement-content">
+                                {{ announcement.content }}
+                            </p>
+
+                            <small class="text-muted">
+
+                                {{ announcement.created_at.strftime('%d %b %Y, %I:%M %p') }}
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-state">
+
+                        <i class="bi bi-chat-left-text"></i>
+
+                        <h5>No announcements yet</h5>
+
+                        <p>
+                            Classroom announcements will appear here.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- STREAM SIDE CARD -->
+
+            <div class="col-lg-4">
+
+                <div class="content-card">
+
+                    <h5>
+                        <i class="bi bi-info-circle"></i>
+                        Classroom Information
+                    </h5>
+
+                    <hr>
+
+                    <p>
+                        <strong>Subject:</strong>
+                        {{ classroom.subject }}
+                    </p>
+
+                    {% if classroom.section %}
+
+                    <p>
+                        <strong>Section:</strong>
+                        {{ classroom.section }}
+                    </p>
+
+                    {% endif %}
+
+                    <p>
+                        <strong>Teacher:</strong>
+                        {{ classroom.teacher.name }}
+                    </p>
+
+                    <p class="mb-0">
+
+                        <strong>Created:</strong>
+
+                        {{ classroom.created_at.strftime('%d %b %Y') }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         CLASSWORK
+         ================================================= -->
+
+    <div
+        id="classwork"
+        class="classroom-tab-content">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h4>
+                    <i class="bi bi-journal-text"></i>
+                    Classwork
+                </h4>
+
+                <p>
+                    Assignments and learning activities.
+                </p>
+
+            </div>
+
+
+            {% if user.role == "teacher" %}
+
+            <a
+                href="{{ url_for(
+                    'create_assignment',
+                    classroom_id=classroom.id
+                ) }}"
+                class="btn btn-primary">
+
+                <i class="bi bi-plus-circle"></i>
+                Create Assignment
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- ASSIGNMENTS -->
+
+        {% if classroom.assignments %}
+
+            <div class="row g-4">
+
+                {% for assignment in classroom.assignments|sort(attribute='created_at', reverse=true) %}
+
+                <div class="col-md-6">
+
+                    <div class="assignment-card">
+
+                        <div class="assignment-icon">
+
+                            <i class="bi bi-file-earmark-text"></i>
+
+                        </div>
+
+
+                        <div class="assignment-info">
+
+                            <h5>
+                                {{ assignment.title }}
+                            </h5>
+
+                            <p>
+
+                                {% if assignment.description %}
+
+                                    {{ assignment.description[:120] }}
+
+                                    {% if assignment.description|length > 120 %}
+                                        ...
+                                    {% endif %}
+
+                                {% else %}
+
+                                    No description provided.
+
+                                {% endif %}
+
+                            </p>
+
+
+                            <div class="assignment-meta">
+
+                                <span>
+                                    <i class="bi bi-award"></i>
+                                    {{ assignment.max_marks }} marks
+                                </span>
+
+
+                                {% if assignment.due_date %}
+
+                                <span>
+                                    <i class="bi bi-calendar-event"></i>
+
+                                    {{ assignment.due_date.strftime(
+                                        '%d %b %Y, %I:%M %p'
+                                    ) }}
+
+                                </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'assignment',
+                                    assignment_id=assignment.id
+                                ) }}"
+                                class="btn btn-outline-primary btn-sm mt-3">
+
+                                View Assignment
+                                <i class="bi bi-arrow-right"></i>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <i class="bi bi-journal-x"></i>
+
+                <h5>No assignments yet</h5>
+
+                {% if user.role == "teacher" %}
+
+                    <p>
+                        Create your first assignment for this class.
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        Your teacher hasn't added any assignments yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- =================================================
+         PEOPLE
+         ================================================= -->
+
+    <div
+        id="people"
+        class="classroom-tab-content">
+
+        <div class="row g-4">
+
+
+            <!-- TEACHER -->
+
+            <div class="col-lg-6">
+
+                <div class="content-card">
+
+                    <h4>
+
+                        <i class="bi bi-person-badge"></i>
+                        Teacher
+
+                    </h4>
+
+                    <hr>
+
+
+                    <div class="person-card">
+
+                        <div class="person-avatar">
+
+                            {{ classroom.teacher.name[0]|upper }}
+
+                        </div>
+
+                        <div>
+
+                            <h6>
+                                {{ classroom.teacher.name }}
+                            </h6>
+
+                            <small>
+                                {{ classroom.teacher.email }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- STUDENTS -->
+
+            <div class="col-lg-6">
+
+                <div class="content-card">
+
+                    <h4>
+
+                        <i class="bi bi-people"></i>
+                        Students
+
+                    </h4>
+
+                    <hr>
+
+
+                    {% if classroom.enrollments %}
+
+                        {% for enrollment in classroom.enrollments %}
+
+                        <div class="person-card">
+
+                            <div class="person-avatar">
+
+                                {{ enrollment.student.name[0]|upper }}
+
+                            </div>
+
+                            <div>
+
+                                <h6>
+                                    {{ enrollment.student.name }}
+                                </h6>
+
+                                <small>
+                                    {{ enrollment.student.email }}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="empty-state small">
+
+                            <i class="bi bi-people"></i>
+
+                            <p class="mb-0">
+                                No students have joined yet.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- BACK BUTTON -->
+
+    <div class="mt-4">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+            Back to Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

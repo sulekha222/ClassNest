@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+
+{% block title %}Register | ClassNest{% endblock %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <!-- HEADER -->
+        <div class="auth-header">
+
+            <div class="auth-icon">
+                <i class="bi bi-person-plus-fill"></i>
+            </div>
+
+            <h2>Create Your Account</h2>
+
+            <p>
+                Join ClassNest and start your learning journey.
+            </p>
+
+        </div>
+
+
+        <!-- REGISTRATION FORM -->
+        <form method="POST" action="{{ url_for('register') }}">
+
+            <!-- NAME -->
+            <div class="mb-3">
+
+                <label for="name" class="form-label">
+                    Full Name
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-person"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+
+                <label for="email" class="form-label">
+                    Email Address
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-envelope"></i>
+                    </span>
+
+                    <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- ROLE -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    I am a
+                </label>
+
+                <div class="role-options">
+
+                    <!-- TEACHER -->
+                    <label class="role-card">
+
+                        <input
+                            type="radio"
+                            name="role"
+                            value="teacher"
+                            required
+                        >
+
+                        <div class="role-content">
+
+                            <i class="bi bi-person-workspace"></i>
+
+                            <strong>Teacher</strong>
+
+                            <small>
+                                Create classes & assignments
+                            </small>
+
+                        </div>
+
+                    </label>
+
+
+                    <!-- STUDENT -->
+                    <label class="role-card">
+
+                        <input
+                            type="radio"
+                            name="role"
+                            value="student"
+                            required
+                        >
+
+                        <div class="role-content">
+
+                            <i class="bi bi-mortarboard"></i>
+
+                            <strong>Student</strong>
+
+                            <small>
+                                Join classes & submit work
+                            </small>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+            <div class="mb-3">
+
+                <label for="password" class="form-label">
+                    Password
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-lock"></i>
+                    </span>
+
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        minlength="6"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        onclick="togglePassword('password', this)"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+
+                </div>
+
+                <small class="text-muted">
+                    Password must contain at least 6 characters.
+                </small>
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="mb-4">
+
+                <label for="confirm_password" class="form-label">
+                    Confirm Password
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+                        <i class="bi bi-shield-lock"></i>
+                    </span>
+
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="confirm_password"
+                        name="confirm_password"
+                        placeholder="Confirm your password"
+                        minlength="6"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        onclick="togglePassword('confirm_password', this)"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+            <button
+                type="submit"
+                class="btn btn-primary w-100 btn-lg"
+            >
+                <i class="bi bi-person-check"></i>
+                Create Account
+            </button>
+
+        </form>
+
+
+        <!-- LOGIN LINK -->
+        <div class="auth-footer">
+
+            <p class="mb-0">
+                Already have an account?
+
+                <a href="{{ url_for('login') }}">
+                    Login here
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+
+function togglePassword(inputId, button) {
+
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector("i");
+
+    if (input.type === "password") {
+
+        input.type = "text";
+
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+
+    } else {
+
+        input.type = "password";
+
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

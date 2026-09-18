@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Home | ClassNest{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+
+    <div class="row align-items-center">
+
+        <!-- LEFT SIDE -->
+        <div class="col-lg-7">
+
+            <span class="badge bg-primary mb-3">
+                <i class="bi bi-stars"></i>
+                Smart Learning Platform
+            </span>
+
+            <h1 class="hero-title">
+                Welcome to
+                <span>ClassNest</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Your Classroom. Your Community. Your Nest.
+            </p>
+
+            <p class="hero-text">
+                A simple and organized platform where teachers can
+                manage classrooms, assignments and students, while
+                students can learn, submit work and track their progress.
+            </p>
+
+            <div class="hero-buttons">
+
+                {% if session.get('user_id') %}
+
+                    <a href="{{ url_for('dashboard') }}"
+                       class="btn btn-primary btn-lg">
+                        <i class="bi bi-grid"></i>
+                        Go to Dashboard
+                    </a>
+
+                {% else %}
+
+                    <a href="{{ url_for('register') }}"
+                       class="btn btn-primary btn-lg">
+                        <i class="bi bi-person-plus"></i>
+                        Get Started
+                    </a>
+
+                    <a href="{{ url_for('login') }}"
+                       class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Login
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="col-lg-5 mt-5 mt-lg-0">
+
+            <div class="hero-card">
+
+                <div class="hero-icon">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+
+                <h3>Learn. Create. Connect.</h3>
+
+                <p>
+                    Everything you need to keep your classroom
+                    learning experience organized.
+                </p>
+
+                <div class="mini-feature">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Easy Classroom Management
+                </div>
+
+                <div class="mini-feature">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Assignment Tracking
+                </div>
+
+                <div class="mini-feature">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Student Collaboration
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES -->
+<section class="features-section">
+
+    <div class="text-center mb-5">
+
+        <span class="section-label">
+            FEATURES
+        </span>
+
+        <h2>
+            Everything in one place
+        </h2>
+
+        <p class="text-muted">
+            Simple tools for teachers and students.
+        </p>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- FEATURE 1 -->
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="bi bi-building"></i>
+                </div>
+
+                <h4>Classrooms</h4>
+
+                <p>
+                    Create or join classrooms using a simple
+                    classroom code.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- FEATURE 2 -->
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+
+                <h4>Assignments</h4>
+
+                <p>
+                    Teachers can create assignments and students
+                    can submit their work online.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- FEATURE 3 -->
+        <div class="col-md-4">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+
+                <h4>Track Progress</h4>
+
+                <p>
+                    Students can view marks and feedback while
+                    teachers can manage submissions.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+
+    <div class="text-center mb-5">
+
+        <span class="section-label">
+            HOW IT WORKS
+        </span>
+
+        <h2>
+            Start learning in three steps
+        </h2>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    1
+                </div>
+
+                <h4>Create an Account</h4>
+
+                <p>
+                    Register as a teacher or student.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    2
+                </div>
+
+                <h4>Join or Create a Class</h4>
+
+                <p>
+                    Teachers create classrooms and students
+                    join using a class code.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    3
+                </div>
+
+                <h4>Learn & Submit</h4>
+
+                <p>
+                    Access assignments, submit work and
+                    receive feedback.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+
+    <h2>
+        Ready to build your classroom?
+    </h2>
+
+    <p>
+        Join ClassNest and make learning more organized.
+    </p>
+
+    {% if not session.get('user_id') %}
+
+        <a href="{{ url_for('register') }}"
+           class="btn btn-light btn-lg">
+            Create Your Account
+        </a>
+
+    {% else %}
+
+        <a href="{{ url_for('dashboard') }}"
+           class="btn btn-light btn-lg">
+            Open Dashboard
+        </a>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
